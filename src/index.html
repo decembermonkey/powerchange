@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隱形眼鏡度數建議</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, button {
+            margin-bottom: 15px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h2>隱形眼鏡度數計算器</h2>
+    <label for="myopia">近視度數:</label>
+    <select id="myopia">
+        <option value="-1.00">-1.00</option>
+        <option value="-1.25">-1.25</option>
+        <option value="-1.50">-1.50</option>
+        <option value="-1.75">-1.75</option>
+        <option value="-2.00">-2.00</option>
+        <option value="-2.25">-2.25</option>
+        <option value="-2.50">-2.50</option>
+        <option value="-2.75">-2.75</option>
+        <option value="-3.00">-3.00</option>
+        <option value="-3.25">-3.25</option>
+        <option value="-3.50">-3.50</option>
+        <option value="-3.75">-3.75</option>
+        <option value="-4.00">-4.00</option>
+        <option value="-4.25">-4.25</option>
+        <option value="-4.50">-4.50</option>
+        <option value="-4.75">-4.75</option>
+        <option value="-5.00">-5.00</option>
+        <option value="-5.25">-5.25</option>
+        <option value="-5.50">-5.50</option>
+        <option value="-5.75">-5.75</option>
+        <option value="-6.00">-6.00</option>
+        <option value="-6.50">-6.50</option>
+        <option value="-7.00">-7.00</option>
+        <option value="-7.50">-7.50</option>
+        <option value="-8.00">-8.00</option>
+        <option value="-8.50">-8.50</option>
+        <option value="-9.00">-9.00</option>
+        <option value="-9.50">-9.50</option>
+        <option value="-10.00">-10.00</option>
+        <option value="-10.50">-10.50</option>
+        <option value="-11.00">-11.00</option>
+        <option value="-11.50">-11.50</option>
+        <option value="-12.00">-12.00</option>
+    </select>
+
+    <br>
+
+    <label for="astigmatism">散光度數:</label>
+    <select id="astigmatism">
+        <option value="0">無散光</option>
+        <option value="-0.25">-0.25</option>
+        <option value="-0.50">-0.50</option>
+        <option value="-0.75">-0.75</option>
+        <option value="-1.00">-1.00</option>
+        <option value="-1.25">-1.25</option>
+        <option value="-1.50">-1.50</option>
+        <option value="-1.75">-1.75</option>
+        <option value="-2.00">-2.00</option>
+    </select>
+
+    <br>
+
+    <button onclick="calculate()">計算</button>
+
+    <h3>建議隱形眼鏡選擇度數: <span id="result"></span></h3>
+
+    <script>
+        const lensOptions = [-1.00, -1.25, -1.50, -1.75, -2.00, -2.25, -2.50, -2.75, -3.00, -3.25, -3.50, -3.75, -4.00, -4.25, -4.50, -4.75, -5.00, -5.25, -5.50, -5.75, -6.00, -6.50, -7.00, -7.50, -8.00, -8.50, -9.00, -9.50, -10.00, -10.50, -11.00, -11.50, -12.00];
+
+        // Helper function to find the closest lens option
+        function getClosestLensOption(value) {
+            return lensOptions.reduce(function(prev, curr) {
+                return Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
+            });
+        }
+
+        function calculate() {
+            let myopia = parseFloat(document.getElementById("myopia").value);
+            let astigmatism = parseFloat(document.getElementById("astigmatism").value);
+            let result = 0;
+
+            // 若有散光，則建議度數為近視度數 + (散光度數 / 2)
+            if (astigmatism!== 0) {
+                result = myopia + (astigmatism / 2);
+                result = getClosestLensOption(result); // 向上取整到最近的合適度數
+            } else {
+                // 若沒有散光，根據近視度數來調整建議度數
+                if (myopia > -4.00) {
+                    result = myopia;  // 近視度數 > -4.00 時，建議度數等同近視度數
+                } else if (myopia <= -4.00 && myopia > -5.35) {
+                    result = myopia + 0.25; // 近視度數在 -4.00 到 -5.25 之間，建議度數比近視度數多 25 度
+                } else if (myopia <= -5.25 && myopia > -7.10) {
+                    result = myopia + 0.50; // 近視度數在 -5.25 到 -7.00 之間，建議度數比近視度數多 50 度
+                } else if (myopia <= -7.25 && myopia > -8.60) {
+                    result = myopia + 0.75; // 近視度數在 -7.25 到 -8.50 之間，建議度數比近視度數多 75 度
+                } else if (myopia <= -8.50 && myopia > -9.80) {
+                    result = myopia + 1.00; // 近視度數在 -8.50 到 -9.80 之間，建議度數比近視度數多 100 度
+                } else if (myopia <= -9.90 && myopia > -13.00) {
+                    result = myopia + 1.25; // 近視度數在 -9.90 到 -13.00 之間，建議度數比近視度數多 125 度
+                }
+                result = getClosestLensOption(result); // 向上取整到最近的合適度數
+            }
+
+            // 顯示結果並保留兩位小數
+            document.getElementById("result").innerText = result.toFixed(2);
+        }
+    </script>
+
+</body>
+</html>
